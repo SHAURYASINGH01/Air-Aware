@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#102b28">
+  <meta name="description" content="AirAware helps campus teams turn a verified air-quality reading into a practical activity review and campus checklist.">
+  <title>AirAware — Campus Air Safety Planner</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="AirAware home">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48"><path d="M24 5c-2 9-7 13-15 15 8 2 13 7 15 15 2-8 7-13 15-15C31 18 26 14 24 5Z"/><path d="M24 17v19M15 24h18"/></svg></span>
+      <span class="brand-copy"><strong>AirAware</strong><small>Campus Air Safety</small></span>
+    </a>
+    <div class="header-meta"><span class="live-dot"></span> ENVIRONMENTAL HACKS · AIR TRACK</div>
+  </header>
+
+  <main id="top" class="page-shell">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="eyebrow-line"></span> FROM AQI TO ACTION</div>
+        <h1>Better campus decisions<br><em>start with the air.</em></h1>
+        <p class="hero-lead">Turn an air-quality reading into a clear activity plan and a checklist campus teams can review together.</p>
+        <div class="hero-pills"><span>✓ Simple workflow</span><span>✓ Activity-aware suggestions</span><span>✓ Campus checklist</span></div>
+      </div>
+      <aside class="hero-note">
+        <div class="note-icon" aria-hidden="true">↗</div>
+        <span class="mini-label">HOW IT WORKS</span>
+        <ol class="mini-steps">
+          <li><span>01</span> Enter a checked AQI reading</li>
+          <li><span>02</span> Choose a campus activity</li>
+          <li><span>03</span> Review suggested actions</li>
+        </ol>
+        <p class="hero-note-foot">Live model context · CPCB AQI must be independently checked</p>
+      </aside>
+    </section>
+
+    <section class="workspace" aria-label="Air quality action planner">
+      <article class="panel input-panel">
+        <div class="section-kicker">01 / INPUT</div>
+        <div class="section-heading"><div><h2>Build an action plan</h2><p>Use a recent reading from a trusted source.</p></div><span class="round-icon" aria-hidden="true">⌁</span></div>
+        <form id="plannerForm" novalidate>
+          <label for="location">Campus location</label>
+          <select id="location" name="location">
+            <option value="Delhi">Delhi</option>
+            <option value="Noida">Noida</option>
+            <option value="Gurugram">Gurugram</option>
+            <option value="Other campus">Other campus</option>
+          </select>
+
+          <label for="aqiInput">AQI reading <span class="label-hint">0–500</span></label>
+          <div class="aqi-entry"><input id="aqiInput" name="aqi" type="number" inputmode="numeric" min="0" max="500" step="1" placeholder="e.g. 168" aria-describedby="aqiHelp formError"><span class="aqi-unit">AQI</span></div>
+          <p id="aqiHelp" class="field-help">Enter the Indian CPCB AQI value you have checked. The model context card below is separate and does not produce India AQI.</p>
+
+          <label for="source">Reading source</label>
+          <select id="source" name="source" required>
+            <option value="" disabled selected>Select a source...</option>
+            <option value="CPCB portal">CPCB portal</option>
+            <option value="Trusted AQI provider">Trusted AQI provider</option>
+            <option value="Illustrative sample">Illustrative sample (demo only)</option>
+          </select>
+
+          <label for="readingTime">Reading date and time <span class="label-hint">Required for checked readings</span></label>
+          <input id="readingTime" name="readingTime" type="datetime-local" aria-describedby="timeHelp">
+          <p id="timeHelp" class="field-help">Enter the timestamp shown by your source. Demo examples do not represent current conditions.</p>
+
+          <label for="activity">Campus activity</label>
+          <select id="activity" name="activity">
+            <option value="sports">Outdoor sports / PE</option>
+            <option value="assembly">Assembly / campus event</option>
+            <option value="commute">Walking between buildings</option>
+            <option value="maintenance">Outdoor maintenance</option>
+          </select>
+
+          <div class="button-stack">
+            <button class="button button-primary" type="submit"><span>Generate action plan</span><span aria-hidden="true">→</span></button>
+            <button class="button button-secondary" id="tryExample" type="button">Try demo example · AQI 168</button>
+          </div>
+          <p id="formError" class="form-message" role="status" aria-live="polite"></p>
+        </form>
+        <div class="source-link-box"><span class="source-symbol" aria-hidden="true">↗</span><span><strong>Need an AQI reading?</strong><small>Check the official CPCB portal, then enter the value above.</small></span><a href="https://www.airquality.cpcb.gov.in/AQI/" target="_blank" rel="noopener noreferrer" aria-label="Open CPCB AQI portal in a new tab">Open CPCB ↗</a></div>
+      </article>
+
+      <article class="panel result-panel" aria-labelledby="resultTitle">
+        <div class="result-topline"><div class="section-kicker">02 / RECOMMENDATION</div><span id="resultBadge" class="result-badge">AWAITING INPUT</span></div>
+        <div id="emptyState" class="empty-state">
+          <div class="empty-illustration" aria-hidden="true"><div class="sun"></div><div class="hill hill-back"></div><div class="hill hill-front"></div><div class="leaf leaf-one"></div><div class="leaf leaf-two"></div></div>
+          <h2 id="resultTitle">Your plan starts here.</h2>
+          <p>Enter an AQI value and choose an activity. Your suggested actions will appear in this space.</p>
+          <div class="empty-tip"><span aria-hidden="true">↳</span> New here? Select <strong>“Try demo example”</strong> to see how it works.</div>
+        </div>
+        <div id="resultContent" class="result-content" hidden>
+          <div class="reading-row"><div><p id="readingLocation" class="reading-location">DELHI · READING NOT VERIFIED</p><div class="aqi-display"><span id="aqiValue">168</span><span class="aqi-caption">AIR QUALITY<br>INDEX</span></div></div><div id="categoryCard" class="category-card"><span class="category-dot"></span><span id="categoryName">Moderate</span></div></div>
+          <p id="categoryMessage" class="category-message"></p>
+          <div class="scale-wrap"><div class="scale-labels"><span>Good</span><span>Satisfactory</span><span>Moderate</span><span>Poor</span><span>Very poor</span><span>Severe</span></div><div class="aqi-scale"><span class="seg good"></span><span class="seg satisfactory"></span><span class="seg moderate"></span><span class="seg poor"></span><span class="seg very-poor"></span><span class="seg severe"></span><span id="scaleMarker" class="scale-marker" aria-label="AQI marker"></span></div><div class="scale-foot"><span>0</span><span>500</span></div></div>
+          <div class="recommendation-header"><div><span class="section-kicker">YOUR ACTIVITY</span><h3 id="activityTitle">Outdoor sports / PE</h3></div><span class="recommendation-icon" aria-hidden="true">✳</span></div>
+          <div id="actionList" class="action-list"></div>
+          <div class="result-disclaimer"><span aria-hidden="true">ⓘ</span><p id="readingDisclaimer">This is a suggested planning aid, not an official alert or medical advice. Verify the reading, time and local guidance before acting.</p></div>
+          <div class="result-tools" aria-label="Plan actions">
+            <button class="button button-secondary button-small" id="copyPlan" type="button">Copy plan</button>
+            <button class="button button-secondary button-small" id="savePlan" type="button">Save plan</button>
+            <button class="button button-secondary button-small" id="downloadPlan" type="button">Download .txt</button>
+          </div>
+          <p id="planToolsStatus" class="field-help" role="status" aria-live="polite"></p>
+        </div>
+      </article>
+    </section>
+
+    <section class="live-air-section" aria-label="Live AQI updates">
+      <article class="panel live-air-panel">
+        <div class="live-air-header">
+          <div>
+            <div class="section-kicker">LIVE AIR QUALITY · AUTO-REFRESH</div>
+            <h2>Live AQI & pollutant context</h2>
+            <p>With a WAQI token on the backend, this shows a nearby station's reported index. Otherwise it shows an Open-Meteo model estimate.</p>
+          </div>
+          <span class="result-badge live-badge" id="liveSourceBadge">CHECKING SOURCE…</span>
+        </div>
+        <div class="live-air-toolbar">
+          <p id="liveAirStatus" role="status" aria-live="polite">Loading the latest available air-quality information…</p>
+          <button class="button button-primary" id="refreshLiveAir" type="button"><span>Refresh now</span><span aria-hidden="true">↻</span></button>
+        </div>
+        <div class="live-metric-grid" id="liveMetricGrid" aria-live="polite">
+          <div class="live-metric"><small id="liveIndexLabel">Reported / modelled index</small><strong id="liveIndexValue">—</strong><span id="liveIndexScale">Scale shown after data loads</span></div>
+          <div class="live-metric"><small>PM₂.₅</small><strong id="livePm25">—</strong><span>μg/m³, if reported</span></div>
+          <div class="live-metric"><small>PM₁₀</small><strong id="livePm10">—</strong><span>μg/m³, if reported</span></div>
+          <div class="live-metric"><small id="liveOtherLabel">European AQI</small><strong id="liveOtherValue">—</strong><span id="liveOtherUnit">Model estimate</span></div>
+        </div>
+        <div class="live-air-footer"><span id="liveAirTimestamp">No reading loaded.</span><a id="liveSourceLink" href="https://aqicn.org/api/" target="_blank" rel="noopener noreferrer">Data source & method ↗</a></div>
+        <p id="liveAirAttribution" class="live-air-attribution">Source attribution will appear here when station data is available.</p>
+        <p class="live-air-warning"><strong>Important:</strong> WAQI's provider-reported index is not the Indian CPCB National AQI. Open-Meteo values are model estimates, not local-station measurements. Do not copy either provider's index into the Indian CPCB AQI field. Use the official CPCB portal for decisions in India.</p>
+      </article>
+    </section>
+
+    <section class="assistant-section" aria-label="AI assistant">
+      <article class="panel assistant-panel">
+        <div class="assistant-heading">
+          <div>
+            <div class="section-kicker">04 / STRANDS AGENT</div>
+            <h2>Ask AirAware</h2>
+            <p>Ask for an explanation of the plan. When AWS Bedrock access is configured, this panel uses a Strands agent with a custom AQI assessment tool.</p>
+          </div>
+          <span class="assistant-mode" id="assistantMode">Checking backend…</span>
+        </div>
+        <form id="assistantForm" class="assistant-form">
+          <label for="agentPattern">Workshop module / agent pattern</label>
+          <select id="agentPattern" name="mode">
+            <option value="single">Module: Single agent + AQI tool (fastest)</option>
+            <option value="swarm">Advanced: Multi-agent swarm (Bedrock calls may take longer)</option>
+          </select>
+          <p class="field-help assistant-mode-help">Single-agent mode is the recommended first test. Swarm mode is an advanced workshop concept and needs usable Amazon Bedrock access.</p>
+          <label for="assistantQuestion">What would you like to know?</label>
+          <textarea id="assistantQuestion" name="question" rows="2" maxlength="600" placeholder="Example: What should we consider before outdoor sports?">What precautions should our campus consider for this activity?</textarea>
+          <button class="button button-primary" type="submit"><span>Ask AirAware</span><span aria-hidden="true">→</span></button>
+        </form>
+        <p id="assistantStatus" class="assistant-status" role="status" aria-live="polite">The AI assistant needs the Python backend. The AQI planner above works without it.</p>
+        <div id="assistantResponse" class="assistant-response" hidden>
+          <div class="assistant-response-top"><strong>AirAware response</strong><span id="assistantModeBadge" class="assistant-mode">Rules-based fallback</span></div>
+          <p id="assistantAnswer"></p>
+        </div>
+      </article>
+    </section>
+
+    <section class="bottom-grid">
+      <article class="panel checklist-panel">
+        <div class="section-kicker">03 / TEAM FOLLOW-THROUGH</div>
+        <div class="section-heading"><div><h2>Campus readiness checklist</h2><p>A quick review for coordinators before sharing a decision.</p></div><div class="progress-ring" id="progressRing"><strong id="progressCount">0/4</strong></div></div>
+        <div class="progress-track"><span id="progressBar"></span></div>
+        <div id="checklist" class="checklist">
+          <label class="check-item"><input type="checkbox"><span class="custom-check" aria-hidden="true"></span><span class="check-copy"><strong>Confirm the AQI source and time</strong><small>Make sure the value is recent and from a trusted source.</small></span></label>
+          <label class="check-item"><input type="checkbox"><span class="custom-check" aria-hidden="true"></span><span class="check-copy"><strong>Review official guidance</strong><small>Consider current conditions and campus procedures.</small></span></label>
+          <label class="check-item"><input type="checkbox"><span class="custom-check" aria-hidden="true"></span><span class="check-copy"><strong>Agree on the activity plan</strong><small>Review an indoor or adjusted option when appropriate.</small></span></label>
+          <label class="check-item"><input type="checkbox"><span class="custom-check" aria-hidden="true"></span><span class="check-copy"><strong>Communicate the decision</strong><small>Share the plan and where to check for updates.</small></span></label>
+        </div>
+        <div class="checklist-footer"><span id="checklistStatus" role="status" aria-live="polite">Ready when your team is.</span><button id="resetChecklist" class="text-button" type="button">Reset checklist ↺</button></div>
+      </article>
+      <aside class="panel impact-panel">
+        <div class="section-kicker">WHY AIRAWARE?</div><div class="impact-icon" aria-hidden="true">◎</div><h2>Information is useful when it leads to action.</h2><p>AirAware gives a campus team a shared starting point: one reading, one activity to review, and a checklist to support a considered decision.</p><div class="impact-points"><span><i>01</i> Clear context</span><span><i>02</i> Practical options</span><span><i>03</i> Team follow-through</span></div>
+      </aside>
+    </section>
+
+    <section class="history-section panel" aria-label="Saved plans on this browser">
+      <div class="history-header"><div><span class="section-kicker">LOCAL ONLY</span><h2>Saved campus plans</h2><p>Saved to this browser only; not uploaded to a server or shared with your college.</p></div><div class="history-actions"><button class="button button-secondary button-small" id="exportHistory" type="button">Export history</button><button class="text-button" id="clearHistory" type="button">Clear history</button></div></div>
+      <div id="historyList" class="history-list"><p class="history-empty">No saved plans yet. Generate a plan, then choose “Save plan”.</p></div>
+      <p id="historyStatus" class="field-help" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="aqi-guide panel"><div><span class="section-kicker">QUICK REFERENCE</span><h2>India AQI category bands</h2><p>Reference bands commonly used by CPCB. Check official guidance for interpretation and action.</p></div><div class="band-list"><span class="band good-band"><b>0–50</b><small>Good</small></span><span class="band satisfactory-band"><b>51–100</b><small>Satisfactory</small></span><span class="band moderate-band"><b>101–200</b><small>Moderate</small></span><span class="band poor-band"><b>201–300</b><small>Poor</small></span><span class="band very-poor-band"><b>301–400</b><small>Very poor</small></span><span class="band severe-band"><b>401–500</b><small>Severe</small></span></div></section>
+
+    <aside class="prototype-notice"><span class="notice-icon" aria-hidden="true">!</span><div><strong>Prototype transparency</strong><p>AirAware keeps the Indian CPCB planner separate from a live-data card. When the server has a WAQI token, the card can show a provider-reported station index and its timestamp; otherwise it displays an Open-Meteo model estimate. Neither provider index is copied into the Indian CPCB planner. Saved plans stay in this browser. The app does not send alerts or provide medical advice; verify official guidance before acting.</p></div></aside>
+    <footer class="site-footer"><a class="brand footer-brand" href="#top"><span class="brand-mark small-mark" aria-hidden="true">✳</span><span class="brand-copy"><strong>AirAware</strong><small>Student project prototype</small></span></a><div class="footer-right"><span>Environmental safety planning prototype</span><a href="https://www.airquality.cpcb.gov.in/AQI/" target="_blank" rel="noopener noreferrer">CPCB AQI portal ↗</a></div></footer>
+  </main>
+</body>
+</html>
