@@ -42,7 +42,7 @@ except Exception as exc:
     SWARM_AVAILABLE = False
     SWARM_IMPORT_ERROR = str(exc)
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent
 FRONTEND_DIR = ROOT / "frontend"
 try:
     from dotenv import load_dotenv
