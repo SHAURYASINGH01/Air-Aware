@@ -43,7 +43,7 @@ except Exception as exc:
     SWARM_IMPORT_ERROR = str(exc)
 
 ROOT = Path(__file__).resolve().parent
-FRONTEND_DIR = ROOT / "frontend"
+FRONTEND_DIR = ROOT
 try:
     from dotenv import load_dotenv
     load_dotenv(ROOT / ".env")
