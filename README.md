@@ -21,7 +21,10 @@ This README describes the project goals and repository contents. It does not cla
 Extract the ZIP and follow the setup instructions included in the package, if provided.
 
 ## Development History
-See the repository's GitHub commit history for the changes that were actually committed. No development steps should be represented as historical commits unless they genuinely occurred.
+See the repository's GitHub commait history for the changes that were actually committed. No development steps should be represented as historical commits unless they genuinely occurred.
 
 ## Youtube Video Demo
 ➡️ https://youtu.be/OLNbXptk9oI
+
+## LinkedIn
+https://www.linkedin.com/in/shauryasingh1
